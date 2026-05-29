@@ -15,27 +15,36 @@ type ReportCaller struct {
 
 	locationBuilder LocationBuilder
 
-	field    string
 	rootPath string
+	field    string
 }
 
 var _ logrus.Hook = (*ReportCaller)(nil)
 
 func New(opts ...Option) *ReportCaller {
-	r := &ReportCaller{
-		levels: []logrus.Level{logrus.ErrorLevel},
-		field:  "Location",
-	}
-
-	r.locationBuilder = func(filePath string, line int) string {
-		return strings.ReplaceAll(filePath, r.rootPath, "") + ":" + strconv.Itoa(line)
-	}
-
-	r.rootPath, _ = os.Getwd()
-	r.rootPath = strings.TrimRight(r.rootPath, "/") + "/"
+	r := &ReportCaller{}
 
 	for _, opt := range opts {
 		opt(r)
+	}
+
+	if len(r.levels) == 0 {
+		r.levels = []logrus.Level{logrus.ErrorLevel}
+	}
+
+	if r.locationBuilder == nil {
+		r.locationBuilder = func(filePath string, line int) string {
+			return strings.ReplaceAll(filePath, r.rootPath, "") + ":" + strconv.Itoa(line)
+		}
+	}
+
+	if r.rootPath == "" {
+		r.rootPath, _ = os.Getwd()
+		r.rootPath = strings.TrimRight(r.rootPath, "/") + "/"
+	}
+
+	if r.field == "" {
+		r.field = "Location"
 	}
 
 	return r
