@@ -19,6 +19,8 @@ type ReportCaller struct {
 	rootPath string
 }
 
+var _ logrus.Hook = (*ReportCaller)(nil)
+
 func New(opts ...Option) *ReportCaller {
 	r := &ReportCaller{
 		levels: []logrus.Level{logrus.ErrorLevel},
