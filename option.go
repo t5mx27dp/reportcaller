@@ -20,14 +20,14 @@ func WithLocationBuilder(fn LocationBuilder) Option {
 	}
 }
 
-func WithField(field string) Option {
-	return func(r *ReportCaller) {
-		r.field = field
-	}
-}
-
 func WithRootPath(path string) Option {
 	return func(r *ReportCaller) {
 		r.rootPath = strings.TrimRight(path, "/") + "/"
+	}
+}
+
+func WithField(field string) Option {
+	return func(r *ReportCaller) {
+		r.field = field
 	}
 }
