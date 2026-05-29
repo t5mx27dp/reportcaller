@@ -1,6 +1,10 @@
 package reportcaller
 
-import "github.com/sirupsen/logrus"
+import (
+	"strings"
+
+	"github.com/sirupsen/logrus"
+)
 
 type Option func(*ReportCaller)
 
@@ -24,6 +28,6 @@ func WithField(field string) Option {
 
 func WithRootPath(path string) Option {
 	return func(r *ReportCaller) {
-		r.rootPath = path
+		r.rootPath = strings.TrimRight(path, "/") + "/"
 	}
 }

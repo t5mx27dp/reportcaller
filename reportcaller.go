@@ -26,10 +26,11 @@ func New(opts ...Option) *ReportCaller {
 	}
 
 	r.locationBuilder = func(filePath string, line int) string {
-		return strings.ReplaceAll(filePath, r.rootPath+"/", "") + ":" + strconv.Itoa(line)
+		return strings.ReplaceAll(filePath, r.rootPath, "") + ":" + strconv.Itoa(line)
 	}
 
 	r.rootPath, _ = os.Getwd()
+	r.rootPath = strings.TrimRight(r.rootPath, "/") + "/"
 
 	for _, opt := range opts {
 		opt(r)
